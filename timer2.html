@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* // SVG styles. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  flex-direction: column;
+  filter: drop-shadow(0px 2px 3px #64676b57);
+  background-color: #f4f5f8;
+  gap: 10px;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+  background-color: #fff;
+  border-radius: 1000px;
+}
+/*// Circle styles.*/
+circle {
+  display: block;
+  fill: transparent;
+  stroke: #ffffff48;
+  stroke-linecap: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 0;
+  stroke-width: 9px;
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+}
+
+.indicator {
+  stroke: #979dc0;
+  z-index: 2;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  color: #555;
+  width: 200px;
+  height: 200px;
+  /* border: 1px solid; */
+  /* gap: 20px; */
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.value-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5em !important;
+  font-weight: 500;
+}
+
+
+
+</style>
+<body>
+    <div class="container">
+        <div class="clock">
+          <svg viewBox="0 0 220 220">
+            <circle
+              shape-rendering="geometricPrecision"
+              cx="110"
+              cy="110"
+              r="96"
+            />
+            <circle
+              shape-rendering="geometricPrecision"
+              class="indicator"
+              cx="110"
+              cy="110"
+              r="96"
+            />
+          </svg>
+          <div class="value-container">
+            <span class="minutes">00</span>
+            :
+            <span class="seconds">00</span>
+          </div>
+        </div>
+       
+      </div>
+</body>
+</html>
+<script>
+    let seconds = document.querySelector(".seconds");
+let minutes = document.querySelector(".minutes");
+let indicator = document.querySelector(".indicator");
+
+
+let counter = -1;
+let pomoValue = 60;
+let counterValue = pomoValue;
+// let restValue = 300000;
+
+  if (counter == -1 && counterValue > 0) {
+    counter = setInterval(() => {
+      let rest = --counterValue;
+      let min = Math.floor(rest / 60);
+      let sec = Math.floor(rest % 60);
+      seconds.textContent = sec.toString().padStart(2, "0");
+      minutes.textContent = min.toString().padStart(2, "0");
+      indicator.style.strokeDashoffset = 600 - (rest / pomoValue) * 600;
+
+      if (rest == 0) {
+        clearInterval(counter);
+      }
+    }, 1000);
+  }
+
+
+</script>

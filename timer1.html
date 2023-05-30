@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .counter {
+  --duration: 0s;
+  --size: 170px;
+  --counter-thickness: 14px;
+  --outer-radius: calc(100% / 2 - 2px);
+  --radius: calc(var(--outer-radius) - var(--counter-thickness) / 2);
+  --inner-radius: calc(var(--radius) - var(--counter-thickness) / 2);
+  --stroke-dasharray: calc(2 * 3.14 * var(--radius));
+  --repetitions: 5;
+  --animation-play-state: running;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--size);
+  height: var(--size);
+}
+.counter[data-animation="paused"] {
+  --animation-play-state: paused;
+}
+
+.counter > span {
+  color: #0e26d8;
+}
+
+.counter > span::after {
+  content: attr(data-repetition) " ";
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7em;
+  font-family: arial;
+}
+
+.counter > svg {
+  transform: rotate(-90deg);
+}
+.counter > svg > circle:first-child {
+  r: var(--outer-radius);
+}
+.counter > svg > circle:nth-child(2) {
+  r: var(--radius);
+  stroke-width: var(--counter-thickness, 8);
+}
+.counter > svg > circle:last-child {
+  r: var(--inner-radius);
+}
+
+.circle_animation {
+  position: relative;
+  stroke-dasharray: var(
+    --stroke-dasharray
+  ); /* this value is the pixel circumference of the circle */
+  stroke-dashoffset: 0;
+  animation: tick var(--duration) linear forwards;
+  animation-iteration-count: var(--repetitions, 1);
+  animation-play-state: var(--animation-play-state);
+}
+
+@keyframes tick {
+  100% {
+    stroke-dashoffset: calc(-1 * var(--stroke-dasharray));
+  }
+}
+
+</style>
+<body>
+    <div class="counter" data-animation>
+        <svg id="tracker" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <circle id="outer_circle" class="st0" cx="50%" cy="50%" r="var(--outer-radius, 2)" fill="none" stroke="#0E26D8" />
+          <circle id="circle" class="circle_animation" cx="50%" cy="50%" r="var(--radius, 1)" stroke="#0E26D8" fill="none" />
+          <circle id="inner_circle" class="st0" cx="50%" cy="50%" r="var(--inner-radius, 0.5)" fill="none" stroke="#0E26D8" />
+        </svg>
+        <span data-repetition=""></span>
+      </div>
+</body>
+</html>
+<script>
+    const REPETITIONS = 60;
+const DURATION = 1000;
+
+const animated = document.querySelector(".circle_animation");
+const spanRepetition = document.querySelector("span[data-repetition]");
+const elem = document.querySelector(".counter");
+
+spanRepetition.dataset.repetition = REPETITIONS;
+elem.style.setProperty("--duration", `${DURATION}ms`);
+elem.style.setProperty("--repetitions", `${REPETITIONS}`);
+
+animated.addEventListener("animationiteration", () => {
+  const r = parseInt(spanRepetition.dataset.repetition);
+  spanRepetition.dataset.repetition = r - 1;
+});
+
+animated.addEventListener("animationend", () => {
+  spanRepetition.dataset.repetition = 0;
+});
+
+</script>
